@@ -1,0 +1,28 @@
+{
+    "discord": {
+        "token": "",
+        "clientId": "",
+        "guildId": "",
+        "ownerId": ""
+    },
+    "command": {
+        "messageCommandPrefix": "!",
+        "ignoreCommandPrefix": "$ignore"
+    },
+    "misc": {
+        "locale": "en"
+    },
+    "bots": [
+        {
+            "id": "",
+            "nickname": "",
+            "avatar": "",
+            "model": "",
+            "prompt": "./prompts/examples/example.txt",
+            "provider": {
+                "baseURL": "",
+                "apiKey": ""
+            }
+        }
+    ]
+}

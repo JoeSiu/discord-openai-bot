@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.eslintcache
+.git
+.gitignore
+.husky
+README.md

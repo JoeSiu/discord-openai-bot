@@ -1,0 +1,41 @@
+{
+    "type": "module",
+    "lint-staged": {
+        "*.ts": "eslint --cache --fix",
+        "*.{ts,css,md}": "prettier --write"
+    },
+    "scripts": {
+        "prepare": "husky install",
+        "lint": "eslint --cache --fix src",
+        "prettier": "prettier --write src",
+        "compile": "tsc",
+        "clean": "rimraf dist/* --glob",
+        "copy": "npx copyfiles prompts/**/* dist/",
+        "build": "npm run lint && npm run prettier && npm run clean && npm run compile",
+        "start": "npm run copy && cd dist && node . && cd ..",
+        "dev": "npm run clean && tsc-watch --onSuccess \"npm run start\"",
+        "prod": "npm run build && npm run start",
+        "typesafe-i18n": "typesafe-i18n"
+    },
+    "dependencies": {
+        "@discordjs/rest": "^2.4.3",
+        "discord.js": "^14.18.0",
+        "dotenv": "^16.4.7",
+        "openai": "^4.83.0",
+        "openai-chat-tokens": "^0.2.8",
+        "typesafe-i18n": "^5.26.2"
+    },
+    "devDependencies": {
+        "@tsconfig/node20": "^20.1.4",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "@typescript-eslint/parser": "^6.21.0",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^9.1.0",
+        "husky": "^8.0.3",
+        "lint-staged": "^14.0.1",
+        "prettier": "^3.5.0",
+        "rimraf": "^5.0.10",
+        "tsc-watch": "^6.2.1",
+        "typescript": "^5.7.3"
+    }
+}

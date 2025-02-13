@@ -1,0 +1,17 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        /* Bundler mode */
+        "resolveJsonModule": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "outDir": "./dist",
+
+        /* Linting */
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": false
+    },
+    "include": ["src/**/*"]
+}
