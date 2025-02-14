@@ -6,6 +6,8 @@ import type {
     SlashCommandBuilder,
     SlashCommandSubcommandsOnlyBuilder
 } from "discord.js";
+import { SUB_COMMANDS_DIR_PATH } from "../constants/constants.js";
+import { logger } from "../services/logger.js";
 import type SubCommand from "./subCommand.js";
 
 /**
@@ -34,9 +36,9 @@ export default class ApplicationCommand {
      */
     constructor(options: {
         data:
-            | SlashCommandBuilder
-            | ContextMenuCommandBuilder
-            | SlashCommandSubcommandsOnlyBuilder;
+        | SlashCommandBuilder
+        | ContextMenuCommandBuilder
+        | SlashCommandSubcommandsOnlyBuilder;
         hasSubCommands?: boolean;
         execute?: (
             interaction: ChatInputCommandInteraction
@@ -60,14 +62,13 @@ export default class ApplicationCommand {
                     try {
                         const command = (
                             await import(
-                                `../subCommands/${this.data.name}/${
-                                    subCommandGroup ? `${subCommandGroup}/` : ""
+                                `../subCommands/${this.data.name}/${subCommandGroup ? `${subCommandGroup}/` : ""
                                 }${commandName}.js`
                             )
                         ).default as SubCommand;
                         await command.execute(interaction);
                     } catch (error) {
-                        console.error(error);
+                        logger.error(error);
                         await interaction.reply({
                             content:
                                 "An error occured when attempting to execute that command!",
@@ -88,8 +89,7 @@ export default class ApplicationCommand {
                     try {
                         const subCommand = (
                             await import(
-                                `../subCommands/${this.data.name}/${
-                                    subCommandGroup ? `${subCommandGroup}/` : ""
+                                `${SUB_COMMANDS_DIR_PATH}${this.data.name}/${subCommandGroup ? `${subCommandGroup}/` : ""
                                 }${subCommandName}.js`
                             )
                         ).default as SubCommand;
@@ -97,7 +97,7 @@ export default class ApplicationCommand {
                             await subCommand.autocomplete(interaction);
                         }
                     } catch (error) {
-                        console.error(error);
+                        logger.error(error);
                         await interaction.respond([
                             {
                                 name: "Failed to autocomplete",

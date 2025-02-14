@@ -109,6 +109,9 @@ dist
 # Config file
 config.json
 
+# Server file
+server.json
+
 # Prompts
 prompts/*
 !prompts/examples/

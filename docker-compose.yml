@@ -7,3 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: discord-openai-bot
     restart: unless-stopped
+    volumes:
+      - /home/joesiu/Development/discord-openai-bot/config.json:/config.json
+      - /home/joesiu/Development/discord-openai-bot/server.json:/server.json
+      - /home/joesiu/Development/discord-openai-bot/prompts:/prompts

@@ -10,7 +10,7 @@
         "prettier": "prettier --write src",
         "compile": "tsc",
         "clean": "rimraf dist/* --glob",
-        "copy": "npx copyfiles prompts/**/* dist/",
+        "copy": "npx copyfiles prompts/**/* config.json server.json dist/",
         "build": "npm run lint && npm run prettier && npm run clean && npm run compile",
         "start": "npm run copy && cd dist && node . && cd ..",
         "dev": "npm run clean && tsc-watch --onSuccess \"npm run start\"",
@@ -23,6 +23,9 @@
         "dotenv": "^16.4.7",
         "openai": "^4.83.0",
         "openai-chat-tokens": "^0.2.8",
+        "p-retry": "^6.2.1",
+        "pino": "^9.6.0",
+        "pino-pretty": "^13.0.0",
         "typesafe-i18n": "^5.26.2"
     },
     "devDependencies": {

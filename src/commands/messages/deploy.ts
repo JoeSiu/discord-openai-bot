@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
-import { REST } from "@discordjs/rest";
-import { RESTPostAPIApplicationCommandsJSONBody, Routes } from "discord.js";
-import { readdirSync } from "fs";
 import { config } from "../../data/config.js";
-import type ApplicationCommand from "../../templates/applicationCommand.js";
-import MessageCommand from "../../templates/messageCommand.js";
-import { SLASH_COMMANDS_PATH } from "../../constants/constants.js";
-import deployGuildCommands from "../../deployGuildCommands.js";
 import deployGlobalCommands from "../../deployGlobalCommands.js";
+import deployGuildCommands from "../../deployGuildCommands.js";
+import { logger } from "../../services/logger.js";
+import MessageCommand from "../../templates/messageCommand.js";
 
 export default new MessageCommand({
     name: "deploy",
@@ -22,7 +18,7 @@ export default new MessageCommand({
             return;
         }
 
-        console.log(`Deploying commands by ${message.author.tag}!}`);
+        logger.info(`Deploying commands by [${message.author.tag}}]`);
 
         if (args[0].toLowerCase() === "global") {
             // global deployment

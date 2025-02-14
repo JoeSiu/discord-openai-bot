@@ -1,11 +1,12 @@
+import * as fs from "fs";
 import OpenAI from "openai";
+import { promptTokensEstimate } from "openai-chat-tokens";
 import { ChatCompletionMessageParam } from "openai/resources/index.js";
+import * as path from "path";
 import { config } from "../data/config.js";
 import { BotConfig } from "../data/parsers/configParser.js";
-import * as fs from "fs";
-import * as path from "path";
+import { logger } from "../services/logger.js";
 import { isValidPathString } from "../utils/pathUtils.js";
-import { promptTokensEstimate } from "openai-chat-tokens";
 
 export class OpenAIBot {
     public client: OpenAI;
@@ -37,9 +38,9 @@ export class OpenAIBot {
         // Update prompt
         this.prompt = isValidPathString(botConfig.prompt)
             ? fs.readFileSync(
-                  path.join(process.cwd(), botConfig.prompt),
-                  "utf-8"
-              ) // TODO: make this async
+                path.join(process.cwd(), botConfig.prompt),
+                "utf-8"
+            ) // TODO: make this async
             : botConfig.prompt;
 
         // Update discord representation
@@ -49,18 +50,14 @@ export class OpenAIBot {
                 ?.members.me?.setNickname(botConfig.nickname);
             await client.user?.setAvatar(botConfig.avatar);
         } catch (error) {
-            console.error("Failed to update discord representation: ", error);
+            logger.error("Failed to update discord representation: ", error);
         }
 
-        console.log(`Bot changed to [${this.botConfig.id}]`);
+        logger.info(`Bot changed to [${this.botConfig.id}]`);
     }
 
-    public updateContext(message: string): ChatCompletionMessageParam[] {
-        this.context.push({
-            role: "user",
-            content: message
-        });
-
+    public addContext(chat: ChatCompletionMessageParam): ChatCompletionMessageParam[] {
+        this.context.push(chat);
         return this.getFullContext();
     }
 

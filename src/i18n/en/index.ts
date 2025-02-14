@@ -9,7 +9,12 @@ const en = {
     messages: {
         contextCleared: "Context cleared",
         changedBot: "Bot changed to {botKey}",
-        configReloaded: "Config reloaded"
+        configReloaded: "Config reloaded",
+        queryRetrying: "Failed to get response, retrying... {retries}",
+        responseFailed: "Failed to get response, please try again {error}",
+    },
+    buttons: {
+        retry: "Retry"
     },
     terms: {
         provider: "provider",

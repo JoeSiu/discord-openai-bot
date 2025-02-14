@@ -1,4 +1,5 @@
 import { BaseInteraction, Events } from "discord.js";
+import { logger } from "../services/logger.js";
 import type ApplicationCommand from "../templates/applicationCommand.js";
 import Event from "../templates/event.js";
 
@@ -14,7 +15,7 @@ export default new Event({
                     )) as ApplicationCommand;
 
                 if (!command.execute) {
-                    console.error(
+                    logger.error(
                         `Failed to find execution handler for ${command.data.name}`
                     );
                     await interaction.reply({
@@ -27,7 +28,7 @@ export default new Event({
 
                 await command.execute(interaction);
             } catch (error) {
-                console.error(error);
+                logger.error(error);
                 await interaction.reply({
                     content: "There was an error while executing this command!",
                     ephemeral: true
@@ -43,7 +44,7 @@ export default new Event({
                     )) as ApplicationCommand;
 
                 if (!command.autocomplete) {
-                    console.error(
+                    logger.error(
                         `Failed to find autocomplete handler for ${command.data.name}`
                     );
                     await interaction.respond([
@@ -57,7 +58,7 @@ export default new Event({
 
                 await command.autocomplete(interaction);
             } catch (error) {
-                console.error(error);
+                logger.error(error);
             }
         }
     }

@@ -4,17 +4,17 @@ import "dotenv/config";
 
 import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
 import { readdirSync } from "fs";
+import {
+    EVENTS_DIR_PATH,
+    MESSAGE_COMMANDS_DIR_PATH,
+    SLASH_COMMANDS_DIR_PATH
+} from "./constants/constants.js";
 import { config } from "./data/config.js";
-import deployGlobalCommands from "./deployGlobalCommands.js";
+import deployGuildCommands from "./deployGuildCommands.js";
+import { logger } from "./services/logger.js";
 import type ApplicationCommand from "./templates/applicationCommand.js";
 import type Event from "./templates/event.js";
 import type MessageCommand from "./templates/messageCommand.js";
-import {
-    EVENTS_PATH,
-    MESSAGE_COMMANDS_PATH,
-    SLASH_COMMANDS_PATH
-} from "./constants/constants.js";
-import deployGuildCommands from "./deployGuildCommands.js";
 
 await deployGuildCommands();
 
@@ -36,58 +36,43 @@ global.client = Object.assign(
 );
 
 // Set each command in the commands folder as a command in the client.commands collection
-const commandFiles: string[] = readdirSync(SLASH_COMMANDS_PATH).filter(
+const commandFiles: string[] = readdirSync(SLASH_COMMANDS_DIR_PATH).filter(
     (file) => file.endsWith(".js") || file.endsWith(".ts")
 );
 for (const file of commandFiles) {
     const command: ApplicationCommand = (
-        await import(`${SLASH_COMMANDS_PATH}${file}`)
+        await import(`${SLASH_COMMANDS_DIR_PATH}${file}`)
     ).default as ApplicationCommand;
     client.slashCommands.set(command.data.name, command);
-    console.log(`Set (/) command: ${command.data.name}`);
+    logger.debug(`Set (/) command: ${command.data.name}`);
 }
 
-const messageCommandFiles: string[] = readdirSync(MESSAGE_COMMANDS_PATH).filter(
+const messageCommandFiles: string[] = readdirSync(MESSAGE_COMMANDS_DIR_PATH).filter(
     (file) => file.endsWith(".js") || file.endsWith(".ts")
 );
 for (const file of messageCommandFiles) {
     const command: MessageCommand = (
-        await import(`${MESSAGE_COMMANDS_PATH}${file}`)
+        await import(`${MESSAGE_COMMANDS_DIR_PATH}${file}`)
     ).default as MessageCommand;
     client.messageCommands.set(command.name, command);
-    console.log(
+    logger.debug(
         `Set (${config.command.messageCommandPrefix}) command: ${command.name}`
     );
 }
 
 // Event handling
-const eventFiles: string[] = readdirSync(EVENTS_PATH).filter(
+const eventFiles: string[] = readdirSync(EVENTS_DIR_PATH).filter(
     (file) => file.endsWith(".js") || file.endsWith(".ts")
 );
 for (const file of eventFiles) {
-    const event: Event = (await import(`${EVENTS_PATH}${file}`))
+    const event: Event = (await import(`${EVENTS_DIR_PATH}${file}`))
         .default as Event;
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
     } else {
         client.on(event.name, (...args) => event.execute(...args));
     }
-    console.log(`Registered event: ${event.name}`);
+    logger.info(`Registered event: ${event.name}`);
 }
 
 await client.login(config.discord.token);
-
-// async function registerCommandsFromPath<T extends ApplicationCommand | MessageCommand>(
-//     path: PathLike,
-//     collection: Collection<string, T>,
-//     getName: (command: T) => string
-// ) {
-//     const commandFiles: string[] = readdirSync(path).filter(
-//         (file) => file.endsWith(".js") || file.endsWith(".ts")
-//     );
-//     for (const file of commandFiles) {
-//         const command = (await import(`${path}${file}`)).default as T;
-//         collection.set(getName(command), command);
-//         console.log(`Registered command: ${getName(command)}`);
-//     }
-// }
